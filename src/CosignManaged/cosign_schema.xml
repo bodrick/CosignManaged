@@ -1,0 +1,60 @@
+﻿<configSchema>
+  <sectionSchema name="system.webServer/cosign">
+    <element name="webloginServer">
+      <attribute name="name" type="string" />
+      <attribute name="loginUrl" type="string" />
+      <attribute name="port" type="int" defaultValue="6663" />
+      <attribute name="postErrorRedirectUrl" type="string" />
+      <attribute name="connectionRetries" type="int" defaultValue="2" />
+    </element>
+    <element name="crypto">
+      <attribute name="certificateCommonName" type="string" />
+    </element>
+    <element name="cookieDb">
+      <attribute name="directory" type="string" expanded="true" />
+      <attribute name="expireTime" type="int" defaultValue="120" />
+    </element>
+    <element name="cookies">
+      <attribute name="secure" type="bool" defaultValue="true" />
+      <attribute name="httpOnly" type="bool" defaultValue="true" />
+    </element>
+    <element name="kerberosTickets">
+      <attribute name="directory" type="string" expanded="true" />
+    </element>
+    <element name="proxyCookies">
+      <attribute name="directory" type="string" expanded="true" />
+    </element>
+    <element name="service">
+      <attribute name="name" type="string" />
+      <collection addElement="add">
+        <attribute name="factor" type="string" />
+        <attribute name="ignoreSuffix" type="string" />
+      </collection>
+    </element>
+    <element name="siteEntry">
+      <attribute name="url" type="string" />
+    </element>
+    <element name="protected">
+      <attribute name="status" type="enum" defaultValue="off">
+        <enum name="off" value="0" />
+        <enum name="on" value="1" />
+        <enum name="allowPublicAccess" value="2" />
+      </attribute>
+    </element>
+    <element name="validation">
+      <attribute name="validReference" type="string" />
+      <attribute name="errorRedirectUrl" type="string" />
+    </element>
+    <element name="compatibilityMode">
+      <attribute name="mode" type="bool" />
+    </element>
+    <element name="CosignNoAppendRedirectPort">
+      <attribute name="mode" type="bool" />
+    </element>
+    <element name="basicAuth">
+      <attribute name="fallback" type="bool" defaultValue="false" />
+      <attribute name="domain" type="string" />
+      <attribute name="realm" type="string" />
+    </element>
+  </sectionSchema>
+</configSchema>

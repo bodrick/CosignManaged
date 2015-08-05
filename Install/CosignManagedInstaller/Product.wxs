@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+  <?define ProductName = "Cosign Managed for IIS 7+ (NET 4.5)" ?>
+  <?define ProductAuthor = "The Pennsylvania State University" ?>
+  <?define ProductAppFolder = "CosignManaged" ?>
+
+  <?define ProductDisplayName = "$(var.ProductName) 64-bit" ?>
+  <?define ProductId = "44B3646B-D5CE-4052-A62B-A61E81E9B427" ?>
+  <?define ProductUpgradeCode = "9A7D2A3F-9867-4088-90CC-B21504707C71" ?>
+
+  <Product Id="$(var.ProductId)" Name="$(var.ProductDisplayName)" Language="1033" Version="!(bind.assemblyVersion.CosignManagedAssembly)" Manufacturer="$(var.ProductAuthor)" UpgradeCode="$(var.ProductUpgradeCode)">
+    <Package InstallerVersion="400" InstallScope="perMachine" Compressed="yes" Manufacturer="$(var.ProductAuthor)" InstallPrivileges="elevated" />
+    <PropertyRef Id="NETFRAMEWORK45" />
+    <PropertyRef Id="NETFRAMEWORK40FULLINSTALLROOTDIR64" />
+
+    <Media Id='1' Cabinet='CosignManaged.cab' EmbedCab='yes' />
+
+    <Condition Message='.NET Framework 4.5 must be installed prior to installation of this product.'>
+      <![CDATA[Installed OR NETFRAMEWORK45]]>
+    </Condition>
+
+    <PropertyRef Id="IISMAJORVERSION" />
+
+    <Condition Message="This application requires IIS 8 or higher.">
+      <![CDATA[Installed OR (IISMAJORVERSION >= "#8")]]>
+    </Condition>
+
+    <Condition Message="This application is only supported on Windows 8 (64 bit) or Windows Server 2012, or higher.">
+      <![CDATA[Installed OR (VersionNT64 >= 602)]]>
+    </Condition>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="System64Folder">
+        <Component Id="CosignManaged" Guid="*" Win64="yes">
+          <File Id="CosignManagedAssembly" Name="$(var.CosignManaged.TargetFileName)" Assembly=".net" KeyPath="yes" Source="$(var.CosignManaged.TargetPath)" />
+          <RegistryKey Id='CosignEventLog' Root='HKLM' Key='System\CurrentControlSet\Services\Eventlog\Application\CosignManaged' ForceDeleteOnUninstall='yes'>
+            <RegistryValue Type='string' Name='EventMessageFile' Value='[NETFRAMEWORK40FULLINSTALLROOTDIR64]EventLogMessages.dll' />
+          </RegistryKey>
+        </Component>
+        <Component Id="CosignManagedAdminClient" Guid="*" Win64="yes">
+          <File Id="CosignManagedAdminClientAssembly" Name="$(var.CosignManagedAdminClient.TargetFileName)" Assembly=".net" KeyPath="yes" Source="$(var.CosignManagedAdminClient.TargetPath)" />
+        </Component>
+        <Component Id="CosignManagedAdminServer" Guid="*" Win64="yes">
+          <File Id="CosignManagedAdminServerAssembly" Name="$(var.CosignManagedAdminServer.TargetFileName)" Assembly=".net" KeyPath="yes" Source="$(var.CosignManagedAdminServer.TargetPath)" />
+        </Component>
+        <Component Id="NLog" Guid="*" Permanent="yes" Win64="yes">
+          <File Id="NLogAssembly" Name="Nlog.dll" Assembly=".net" KeyPath="yes" Source="$(var.CosignManaged.TargetDir)\NLog.dll" />
+        </Component>
+        <Directory Id="inetsrv" Name="inetsrv">
+          <Component Id="NlogConfig" Guid="*" Win64="yes">
+            <File Id="NLogConfigFile" Name="Nlog.config" KeyPath="yes" Source="$(var.CosignManaged.ProjectDir)\Nlog.config" />
+          </Component>
+          <Directory Id="config" Name="config">
+            <Directory Id="schema" Name="schema">
+              <Component Id="CosignSchema" Guid="*" Permanent="yes" Win64="yes">
+                <File Id="CosignSchemaFile" Name="cosign_schema.xml" KeyPath="yes" Source="$(var.CosignManaged.ProjectDir)\cosign_schema.xml" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Binary Id="CosignCA" SourceFile="$(var.CosignManagedCustomAction.TargetDir)\CosignManagedCustomAction.CA.dll" />
+    <CustomAction Id="InstallID" BinaryKey="CosignCA" DllEntry="Install" Execute="deferred" Return="check" />
+    <CustomAction Id="UninstallID" BinaryKey="CosignCA" DllEntry="Uninstall" Execute="immediate" Return="check" />
+    <!-- <CustomAction Id="AssignAssemblyVersion" Return="check" Property="InstallID" Value="AdminClientAssembly=!(bind.assemblyFullName.CosignManagedAdminClientAssembly);AdminServerAssembly=!(bind.assemblyFullName.CosignManagedAdminServerAssembly);CosignAssembly=!(bind.assemblyFullName.CosignManagedAssembly);" /> -->
+    <CustomAction Id="AssignAssemblyVersion" Return="check" Property="InstallID" Value="AdminServerAssembly=!(bind.assemblyFullName.CosignManagedAdminServerAssembly);CosignAssembly=!(bind.assemblyFullName.CosignManagedAssembly);" />
+
+    <InstallExecuteSequence>
+      <Custom Action="AssignAssemblyVersion" Before="InstallID">NOT Installed</Custom>
+      <Custom Action="InstallID" Before="InstallFinalize">NOT Installed</Custom>
+      <Custom Action="UninstallID" After="RegisterProduct">Installed</Custom>
+    </InstallExecuteSequence>
+
+    <Feature Id="ProductFeature" Title="CosignManagedWix" Level="1">
+      <ComponentRef Id="CosignManaged" />
+      <ComponentRef Id="CosignManagedAdminClient" />
+      <ComponentRef Id="CosignManagedAdminServer" />
+      <ComponentRef Id="NLog" />
+      <ComponentRef Id="NlogConfig" />
+      <ComponentRef Id="CosignSchema" />
+    </Feature>
+    <UIRef Id="WixUI_Minimal" />
+
+    <Property Id='ARPNOREPAIR'>1</Property>
+
+    <WixVariable Id="WixUILicenseRtf" Value="GNU General Public License v2.rtf" />
+  </Product>
+</Wix>
