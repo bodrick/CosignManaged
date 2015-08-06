@@ -47,7 +47,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Microsoft.Web\4.5\Microsoft.Web.Administration.dll</HintPath>
+      <HintPath>..\..\Libraries\Microsoft.Web\Microsoft.Web.Administration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NLog, Version=3.2.1.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
