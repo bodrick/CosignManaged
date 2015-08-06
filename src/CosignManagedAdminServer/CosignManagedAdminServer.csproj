@@ -46,11 +46,13 @@
   <ItemGroup>
     <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Microsoft.Web\4.5\Microsoft.Web.Administration.dll</HintPath>
+      <HintPath>..\..\Libraries\Microsoft.Web\4.5\Microsoft.Web.Administration.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Management, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Microsoft.Web\4.5\Microsoft.Web.Management.dll</HintPath>
+      <HintPath>..\..\Libraries\Microsoft.Web\4.5\Microsoft.Web.Management.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -66,8 +68,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>CALL "%25VS110COMNTOOLS%25\vsvars32.bat" &gt; NULL
-gacutil.exe /if "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>REM CALL "%25VS110COMNTOOLS%25\vsvars32.bat" &gt; NULL
+REM gacutil.exe /if "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  <?define ProductName = "Cosign Managed for IIS 7+ (NET 4.5)" ?>
+  <?define ProductName = "Cosign Managed for IIS 8+ (NET 4.5)" ?>
   <?define ProductAuthor = "The Pennsylvania State University" ?>
   <?define ProductAppFolder = "CosignManaged" ?>
 
